@@ -5,7 +5,7 @@
             "direction": "in",
             "authLevel": "anonymous",
             "methods": ["get"],
-            "route": "static"
+            "route": ""  // Serve from the root URL
         },
         {
             "type": "http",
