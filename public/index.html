@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyFade - Secure Password Sharing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        #expiryRange {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KeyFade - Secure Password Sharing</h1>
+        <form id="secretForm">
+            <label for="secret">Enter Secret/Password:</label>
+            <input type="password" id="secret" placeholder="Enter secret" required>
+
+            <label for="expiryRange">Expiry (Days): <span id="expiryLabel">1</span></label>
+            <input type="range" id="expiryRange" min="1" max="90" value="1">
+
+            <button type="submit">Create Secure Link</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
