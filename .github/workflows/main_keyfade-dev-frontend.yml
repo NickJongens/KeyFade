@@ -9,14 +9,19 @@ on:
       - main
   workflow_dispatch:
 
+# Set the permissions for the workflow
+permissions:
+  contents: write  # Grants write access to the repository contents
+  id-token: write  # Grants permission to request the JWT for Azure authentication
+
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # Set this to the path to your web app project, defaults to the repository root
 
 jobs:
   deploy:
     runs-on: windows-latest
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write # This is required for requesting the JWT
 
     steps:
       - name: 'Checkout GitHub Action'
@@ -36,4 +41,3 @@ jobs:
           app-name: 'keyfade-dev-frontend'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          
