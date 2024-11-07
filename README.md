@@ -6,7 +6,7 @@
     <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
 </a>
 
-![KeyFade - Demo](https://demo.keyfade.com/)
+[KeyFade - Demo](https://demo.keyfade.com/)
 
 KeyFade is a link-based encryption tool that allows users to encrypt secrets into shareable links with a specified expiration period. 
 This project includes a user-friendly frontend, that connects to a secure backend API for encryption and storage of sensitive information using Azure Key Vault.
