@@ -68,7 +68,7 @@ Docker Run:
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
   -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> \
   -e TENANT_ID=<YOUR_TENANT_ID> \
-  -e KEY_VAULT_NAME=keyfade-kv \
+  -e KEY_VAULT_NAME=<Azure_Key_Vault_Name \
   -e BACKEND_URL=https://demo-api.keyfade.com \
   -e FRONTEND_URL=https://demo.keyfade.com \
   -e HMAC_SECRET=<YOUR_HMAC_SECRET> \
