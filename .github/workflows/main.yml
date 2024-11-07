@@ -38,5 +38,5 @@ jobs:
             --build-arg FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
             --build-arg HMAC_SECRET=${{ secrets.HMAC_SECRET }} \
             --build-arg WEBHOOK_URL=${{ secrets.WEBHOOK_URL }} \
-            -t ghcr.io/${{ github.repository_owner }}/keyfade-backend:latest .
-          docker push ghcr.io/${{ github.repository_owner }}/keyfade-backend:latest
+            -t ghcr.io/${{ github.repository_owner | lower }}/keyfade-backend:latest .
+          docker push ghcr.io/${{ github.repository_owner | lower }}/keyfade-backend:latest
