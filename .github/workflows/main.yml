@@ -17,12 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Log in to GitHub Container Registry
+      # Log in to GitHub Container Registry (GHCR)
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
 
       # Build and push keyfade-backend container
       - name: Build and Push keyfade-backend container
