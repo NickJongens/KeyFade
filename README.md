@@ -1,6 +1,6 @@
 ![KeyFade Logo](https://public.keyfade.com/logo.png)
 
-# KeyFade - Secure Link-Based Encryption Tool
+# KeyFade - A Secure Link-Based Encryption Tool
 
 <a href="https://www.buymeacoffee.com/NickJongens" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
