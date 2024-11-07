@@ -28,12 +28,43 @@ jobs:
       - name: Build and Push keyfade-backend container
         run: |
           cd keyfade-backend
-          docker build -t ghcr.io/${{ github.repository_owner }}/keyfade-backend:latest .
+          docker build \
+            --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} \
+            --build-arg CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} \
+            --build-arg TENANT_ID=${{ secrets.TENANT_ID }} \
+            --build-arg KEY_VAULT_NAME=${{ secrets.KEY_VAULT_NAME }} \
+            --build-arg BACKEND_URL=${{ secrets.BACKEND_URL }} \
+            --build-arg FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
+            --build-arg HMAC_SECRET=${{ secrets.HMAC_SECRET }} \
+            --build-arg WEBHOOK_URL=${{ secrets.WEBHOOK_URL }} \
+            -t ghcr.io/${{ github.repository_owner }}/keyfade-backend:latest .
           docker push ghcr.io/${{ github.repository_owner }}/keyfade-backend:latest
 
       # Build and push keyfade-frontend container
       - name: Build and Push keyfade-frontend container
         run: |
           cd keyfade-frontend
-          docker build -t ghcr.io/${{ github.repository_owner }}/keyfade-frontend:latest .
+          docker build \
+            --build-arg VITE_LOGO_URL=https://public.keyfade.com/logo.png \
+            --build-arg VITE_FAVICON_URL=/favicon.ico \
+            --build-arg VITE_CREATE_PASSWORD_LABEL="Secret to Encrypt:" \
+            --build-arg VITE_CREATE_EXPIRY_OPTIONS_LABEL="Expiry Options:" \
+            --build-arg VITE_LINK_GENERATED_LABEL="Encrypted Link:" \
+            --build-arg VITE_LINK_COPY_LABEL="Copy Link" \
+            --build-arg VITE_SECRET_LABEL="Secret:" \
+            --build-arg VITE_CREATE_TOAST_ERROR_TITLE="Error" \
+            --build-arg VITE_CREATE_TOAST_ERROR_DESCRIPTION="Failed to generate an encrypted link." \
+            --build-arg VITE_LINK_TOAST_COPIED_TITLE="Link Copied" \
+            --build-arg VITE_LINK_TOAST_COPIED_DESCRIPTION="The link has been copied to your clipboard." \
+            --build-arg VITE_NOT_FOUND_MESSAGE="404 - Page Not Found" \
+            --build-arg VITE_EXPIRY_SLIDER_COLOR="purple" \
+            --build-arg VITE_TEXT_COLOR="black" \
+            --build-arg VITE_BUTTON_COLOR="purple" \
+            --build-arg VITE_LINK_BUTTON_COLOR="purple" \
+            --build-arg VITE_NOT_FOUND_BUTTON_COLOR="purple" \
+            --build-arg VITE_DELETE_BUTTON_COLOR="#FED7D7" \
+            --build-arg VITE_BACKEND_URL=https://demo-api.keyfade.com \
+            --build-arg VITE_FRONTEND_URL=https://demo.keyfade.com \
+            --build-arg HMAC_SECRET=${{ secrets.HMAC_SECRET }} \
+            -t ghcr.io/${{ github.repository_owner }}/keyfade-frontend:latest .
           docker push ghcr.io/${{ github.repository_owner }}/keyfade-frontend:latest
