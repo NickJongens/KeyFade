@@ -1,0 +1,16 @@
+.link-box {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.label {
+    font-weight: bold;
+    font-size: 1.2em; /* Adjust the size as needed */
+    text-align: center; /* Center the label text */
+    margin-bottom: 1em; /* Add some spacing below the label */
+}

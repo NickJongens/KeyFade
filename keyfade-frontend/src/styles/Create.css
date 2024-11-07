@@ -1,0 +1,32 @@
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+    font-weight: bold;
+    font-size: 1.2em; /* Adjust the size as needed */
+    text-align: center; /* Center the label text */
+    margin-bottom: 8px; /* Add some space below the label */
+}
+
+.form-control {
+    display: flex; /* Use flexbox for centering */
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    width: 100%; /* Ensure it takes the full width */
+}
+
+.input-field {
+    width: 80%; /* Adjust the width of the input field */
+    text-align: center; /* Center the text in the input */
+}
+
+.label {
+    font-weight: bold;
+    font-size: 1.2em; /* Adjust the size as needed */
+    text-align: center; /* Center the label text */
+    margin-bottom: 1em; /* Add some spacing below the label */
+}
