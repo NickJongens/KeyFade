@@ -62,7 +62,8 @@ docker pull ghcr.io/nickjongens/keyfade-backend:latest
 
 Docker Run:
 
-```docker run -d -p <port>:3002 \
+```
+docker run -d -p <port>:3002 \
   --name keyfade-backend \
   -e TZ=Pacific/Auckland \
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
