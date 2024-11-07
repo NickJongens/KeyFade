@@ -55,10 +55,16 @@ Build the container if you've made any changes or would like to ensure you have 
 docker build -t keyfade-backend:latest .
 ```
 
+Or Use the publicly available backend container:
+```
+docker pull ghcr.io/nickjongens/keyfade-backend:latest
+```
+
 Docker Run:
 
 ```docker run -d -p <port>:3002 \
   --name keyfade-backend \
+  -e TZ=Pacific/Auckland \
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
   -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> \
   -e TENANT_ID=<YOUR_TENANT_ID> \
@@ -67,7 +73,7 @@ Docker Run:
   -e FRONTEND_URL=https://demo.keyfade.com \
   -e HMAC_SECRET=<YOUR_HMAC_SECRET> \
   -e WEBHOOK_URL=<YOUR_TEAMS_WEBHOOK_URL> \
-  keyfade-backend:latest
+  ghcr.io/nickjongens/keyfade-backend:latest
 ```
 
 ## Azure Key Vault Setup
