@@ -33,7 +33,7 @@ This service is built using the following technologies:
   TENANT_ID:
   Your Azure Active Directory Tenant ID
   KEY_VAULT_NAME:
-  Name of the Key Vault used for secure data storage (e.g., keyfade-kv)
+  Name of the Key Vault used for secure data storage without the full url
   
   BACKEND_URL:
   URL of the backend (e.g., https://demo-api.keyfade.com)
@@ -62,7 +62,7 @@ Docker Run:
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
   -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> \
   -e TENANT_ID=<YOUR_TENANT_ID> \
-  -e KEY_VAULT_NAME=keyfade-kv \
+  -e KEY_VAULT_NAME=<YOUR_AZURE_KEY_VAULT> \
   -e BACKEND_URL=https://demo-api.keyfade.com \
   -e FRONTEND_URL=https://demo.keyfade.com \
   -e HMAC_SECRET=<YOUR_HMAC_SECRET> \

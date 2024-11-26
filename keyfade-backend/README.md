@@ -33,7 +33,7 @@ This service is built using the following technologies:
   TENANT_ID:
   Your Azure Active Directory Tenant ID
   KEY_VAULT_NAME:
-  Name of the Key Vault used for secure data storage (e.g., keyfade-kv)
+  Name of the Key Vault used for secure data storage without the full url
   
   BACKEND_URL:
   URL of the backend (e.g., https://demo-api.keyfade.com)
@@ -55,26 +55,19 @@ Build the container if you've made any changes or would like to ensure you have 
 docker build -t keyfade-backend:latest .
 ```
 
-Or Use the publicly available backend container:
-```
-docker pull ghcr.io/nickjongens/keyfade-backend:latest
-```
-
 Docker Run:
 
-```
-docker run -d -p <port>:3002 \
+```docker run -d -p <port>:3002 \
   --name keyfade-backend \
-  -e TZ=Pacific/Auckland \
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
   -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> \
   -e TENANT_ID=<YOUR_TENANT_ID> \
-  -e KEY_VAULT_NAME=<Azure_Key_Vault_Name \
+  -e KEY_VAULT_NAME=<YOUR_AZURE_KEY_VAULT> \
   -e BACKEND_URL=https://demo-api.keyfade.com \
   -e FRONTEND_URL=https://demo.keyfade.com \
   -e HMAC_SECRET=<YOUR_HMAC_SECRET> \
   -e WEBHOOK_URL=<YOUR_TEAMS_WEBHOOK_URL> \
-  ghcr.io/nickjongens/keyfade-backend:latest
+  keyfade-backend:latest
 ```
 
 ## Azure Key Vault Setup
@@ -102,5 +95,6 @@ There are no API permissions to be given here. These are provided in the Key Vau
 - Setup a Cloudflare tunnel to point to a self-hosted container for both the frontend and backend containers.
 - Setup an Azure Kubernetes Cluster behind a load balancer to provide public access to each service.
 - Run the containers within Azure Container Instances.
+
 
 
