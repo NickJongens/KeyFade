@@ -81,7 +81,7 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   -e DELETE_BUTTON_COLOR=red \
   -e LOGO_URL=https://public.keyfade.com/logo.png \
   -e FAVICON_URL=https://demo.keyfade.com/favicon.ico \
-  keyfade:latest
+  ghcr.io/nickjongens/keyfade:latest
 ```
 
 ## Azure Key Vault Setup
