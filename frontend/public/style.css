@@ -1,0 +1,231 @@
+/* Global resets */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #fff; /* Always white */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: var(--text-color);
+}
+
+/* Container Styles */
+.container {
+  background: #fff;
+  max-width: 500px;
+  width: 90%;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Header & Logo */
+.header {
+  margin-bottom: 1rem;
+}
+
+.logo {
+  max-width: 250px;
+  height: auto;
+  margin-top: 5px;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+input[type="text"]:focus {
+  border-color: var(--button-color);
+  box-shadow: 0 0 8px rgba(128, 90, 213, 0.3);
+  outline: none;
+}
+
+/* Slider Styles */
+input[type="range"] {
+  width: 100%;
+  height: 4px;
+  background: var(--expiry-slider-color);
+  border-radius: 2px;
+  outline: none;
+  margin: 0.5rem 0;
+  border: none;
+  position: relative;
+}
+
+/* Chrome, Safari, Edge */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Slider Label */
+.slider-label {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Button Styles */
+button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  background: var(--button-color);
+  color: #fff;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: var(--button-color);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Delete Button */
+.delete-btn {
+  background: #FED7D7;
+  color: #B22222;
+}
+
+/* Link Generated State */
+#linkState {
+  margin-top: 1rem;
+  padding: 2rem;
+  border-radius: 16px;
+  animation: fadeIn 0.5s ease-in-out;
+  background: transparent; /* Remove any background */
+}
+
+
+
+#linkState p {
+  margin: 0.5rem 0;
+  font-weight: 600;
+  color: #333;
+}
+
+#secretLink {
+  display: inline-block;
+  margin: 0.5rem 0;
+  color: var(--button-color);
+  text-decoration: none;
+  font-weight: 600;
+  word-break: break-all;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Ensures it does not extend beyond the box */
+}
+
+#secretLink:hover {
+  text-decoration: underline;
+}
+
+.reminder {
+  margin-top: 1.5rem;
+  padding-top: 5%;
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.5rem;
+}
+
+/* View State */
+#viewState {
+  margin-bottom: 5%;
+  padding: 1rem;
+  border-radius: 16px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Secret Box */
+.secret-box {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  background: transparent; /* Remove background */
+  text-align: center;
+  word-break: break-word;
+  margin-bottom: 8%;
+  border-color: var(--button-color);
+  box-shadow: 0 0 8px rgba(128, 90, 213, 0.3);
+  outline: none;
+}
+
+/* Utility */
+.hidden {
+  display: none;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

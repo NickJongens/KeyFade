@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KeyFade Demo</title>
+    <!-- Import Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --expiry-slider-color: <%= expirySliderColor || '#805ad5' %>;
+        --text-color: <%= TEXT_COLOR || 'black' %>;
+        --button-color: <%= BUTTON_COLOR || '#805ad5' %>;
+        --not-found-button-color: <%= NOT_FOUND_BUTTON_COLOR || '#805ad5' %>;
+        --delete-button-color: <%= DELETE_BUTTON_COLOR || '#FED7D7' %>;
+      }
+    </style>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <!-- Dynamically inject the logo URL safely -->
+        <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+          <img src="<%= logoUrl %>" alt="Logo" class="logo" />
+        <% } %>
+      </header>
+
+      <!-- Create Secret State -->
+      <div id="createState">
+        <form id="createForm">
+          <div class="form-group">
+            <label for="secretInput"><%= CREATE_PASSWORD_LABEL || 'Secret to Encrypt:' %></label>
+            <input type="text" id="secretInput" placeholder="Enter a secret" required />
+          </div>
+          <div class="form-group">
+            <label for="expirySlider"><%= CREATE_EXPIRY_OPTIONS_LABEL || 'Expiry Options:' %></label>
+            <input type="range" id="expirySlider" min="0" max="5" value="1" step="1" />
+            <div class="slider-label"><span id="expiryLabel">1 Week (7 Days)</span></div>
+          </div>
+          <button type="submit">Generate Link</button>
+        </form>
+      </div>
+
+      <!-- Link Generated State -->
+      <div id="linkState" class="hidden">
+        <p><%= LINK_GENERATED_LABEL || 'Encrypted Link:' %></p>
+        <a id="secretLink" target="_blank" href="" class="secret-box"></a>
+        <button id="copyButton"><%= LINK_COPY_LABEL || 'Copy Link' %></button>
+        <p class="reminder"><%= LINK_BELOW_TEXT || 'Please remember to send this link to your technician.' %></p>
+      </div>
+
+      <!-- View/Retrieval State -->
+      <div id="viewState" class="hidden">
+        <p><%= SECRET_LABEL || 'Secret:' %></p>
+        <div id="secretValue" class="secret-box"></div>
+        <button id="viewCopyButton">Copy</button>
+        <button id="deleteButton" style="background-color: var(--delete-button-color);">Delete</button>
+      </div>
+    </div>
+
+    <!-- Inject environment variables into the global scope safely -->
+    <script>
+      window.HMAC_SECRET = "<%= HMAC_SECRET || '' %>";
+      window.BACKEND_URL = "<%= BACKEND_URL || '' %>";
+      window.FRONTEND_URL = "<%= FRONTEND_URL || '' %>";
+      window.CREATE_PASSWORD_LABEL = "<%= CREATE_PASSWORD_LABEL || '' %>";
+      window.CREATE_EXPIRY_OPTIONS_LABEL = "<%= CREATE_EXPIRY_OPTIONS_LABEL || '' %>";
+      window.LINK_GENERATED_LABEL = "<%= LINK_GENERATED_LABEL || '' %>";
+      window.LINK_COPY_LABEL = "<%= LINK_COPY_LABEL || '' %>";
+      window.SECRET_LABEL = "<%= SECRET_LABEL || '' %>";
+      window.LINK_BELOW_TEXT = "<%= LINK_BELOW_TEXT || '' %>";
+      window.TEXT_COLOR = "<%= TEXT_COLOR || '' %>";
+      window.BUTTON_COLOR = "<%= BUTTON_COLOR || '' %>";
+      window.NOT_FOUND_BUTTON_COLOR = "<%= NOT_FOUND_BUTTON_COLOR || '' %>";
+      window.DELETE_BUTTON_COLOR = "<%= DELETE_BUTTON_COLOR || '' %>";
+    </script>
+    <script src="/script.js"></script>
+  </body>
+</html>
