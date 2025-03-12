@@ -9,6 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <% if (typeof FAVICON_URL !== 'undefined' && FAVICON_URL) { %>
+      <link rel="icon" href="<%= FAVICON_URL %>" type="image/x-icon" />
+    <% } %>
     <style>
       :root {
         --expiry-slider-color: <%= expirySliderColor || '#805ad5' %>;
