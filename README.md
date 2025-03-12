@@ -58,7 +58,8 @@ docker build -t keyfade:latest .
 
 Docker Run:
 
-```docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
+```
+docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   --name keyfade \
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
   -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> \
