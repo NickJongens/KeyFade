@@ -1,4 +1,4 @@
-name: Build and Push Backend Docker Container to GitHub Container Registry
+name: Build and Push Docker Container to GitHub Container Registry
 
 on:
   push:
@@ -25,18 +25,19 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
 
-      # Build and push keyfade-backend container - hard coded name due to repo capitalisation
-      - name: Build and Push keyfade-backend container
+      # Build and push Docker container
+      - name: Build and Push Docker container
         run: |
-          cd keyfade-backend
           docker build \
             --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} \
             --build-arg CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} \
             --build-arg TENANT_ID=${{ secrets.TENANT_ID }} \
             --build-arg KEY_VAULT_NAME=${{ secrets.KEY_VAULT_NAME }} \
+            --build-arg HMAC_SECRET=${{ secrets.HMAC_SECRET }} \
             --build-arg BACKEND_URL=${{ secrets.BACKEND_URL }} \
             --build-arg FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
-            --build-arg HMAC_SECRET=${{ secrets.HMAC_SECRET }} \
             --build-arg WEBHOOK_URL=${{ secrets.WEBHOOK_URL }} \
-            -t ghcr.io/nickjongens/keyfade-backend:latest .
-          docker push ghcr.io/nickjongens/keyfade-backend:latest
+            -t ghcr.io/nickjongens/keyfade:latest \
+            --file Dockerfile .
+
+          docker push ghcr.io/nickjongens/keyfade:latest
