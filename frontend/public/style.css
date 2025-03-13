@@ -81,6 +81,8 @@ input[type="text"]:focus::placeholder {
 
 /* Slider Styles */
 input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 4px;
   background: var(--expiry-slider-color);
@@ -91,7 +93,11 @@ input[type="range"] {
   position: relative;
 }
 
-/* Chrome, Safari, Edge */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: var(--expiry-slider-color);
+  border-radius: 2px;
+}
+
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -100,19 +106,12 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: #fff;
   cursor: pointer;
-  position: relative;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Firefox */
-input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* Slider Label */
