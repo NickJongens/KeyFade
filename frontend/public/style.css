@@ -74,6 +74,11 @@ input[type="text"]:focus {
   outline: none;
 }
 
+input[type="text"]:focus::placeholder {
+  color: transparent;
+}
+
+
 /* Slider Styles */
 input[type="range"] {
   width: 100%;
