@@ -69,7 +69,7 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   -e FRONTEND_URL=https://demo.keyfade.com \
   -e HMAC_SECRET=<YOUR_HMAC_SECRET> \
   -e WEBHOOK_URL=<YOUR_TEAMS_WEBHOOK_URL> \
-  -e TITLE_TEXT=KeyFade \
+  -e TITLE_TEXT=KeyFade - Demo \
   -e CREATE_PASSWORD_LABEL="Secret to Encrypt:" \
   -e CREATE_EXPIRY_OPTIONS_LABEL="Expiry Options:" \
   -e LINK_GENERATED_LABEL="Encrypted Link:" \
