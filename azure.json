@@ -1,0 +1,342 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.33.93.31351",
+      "templateHash": "14949272935210556831"
+    }
+  },
+  "parameters": {
+    "customerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Customer identifier used for container and Key Vault naming (lowercase required)."
+      }
+    },
+    "TENANT_ID": {
+      "type": "string",
+      "metadata": {
+        "description": "Entra ID Tenant ID (specified by the customer for Key Vault)."
+      }
+    },
+    "CLIENT_ID": {
+      "type": "string",
+      "metadata": {
+        "description": "Entra ID Object/App ID for Key Vault access (Application ID)."
+      }
+    },
+    "CLIENT_SECRET": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Entra ID Object/App Secret for Key Vault access (Application Secret)."
+      }
+    },
+    "HMAC_SECRET": {
+      "type": "securestring",
+      "metadata": {
+        "description": "HMAC Secret for cryptographic operations (must be set by customer)."
+      }
+    },
+    "BACKEND_URL": {
+      "type": "string",
+      "metadata": {
+        "description": "Backend URL (e.g. demo-api.keyfade.com)."
+      }
+    },
+    "FRONTEND_URL": {
+      "type": "string",
+      "metadata": {
+        "description": "Frontend URL (e.g. demo.keyfade.com)."
+      }
+    },
+    "LOGO_URL": {
+      "type": "string",
+      "metadata": {
+        "description": "Logo URL"
+      }
+    },
+    "FAVICON_URL": {
+      "type": "string",
+      "metadata": {
+        "description": "Favicon URL"
+      }
+    },
+    "cpu": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "CPU cores for container (must be an integer; decimals are not supported)."
+      }
+    },
+    "memory": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Memory in GB for container (must be an integer; decimals are not supported)."
+      }
+    },
+    "CREATE_PASSWORD_LABEL": {
+      "type": "string",
+      "defaultValue": "Secret to Encrypt:",
+      "metadata": {
+        "description": "Label for creating password (secret to encrypt)."
+      }
+    },
+    "CREATE_EXPIRY_OPTIONS_LABEL": {
+      "type": "string",
+      "defaultValue": "Expiry Options:",
+      "metadata": {
+        "description": "Label for expiry options."
+      }
+    },
+    "LINK_GENERATED_LABEL": {
+      "type": "string",
+      "defaultValue": "Encrypted Link:",
+      "metadata": {
+        "description": "Label for the generated encrypted link."
+      }
+    },
+    "LINK_COPY_LABEL": {
+      "type": "string",
+      "defaultValue": "Copy Link",
+      "metadata": {
+        "description": "Label for the copy link button."
+      }
+    },
+    "SECRET_LABEL": {
+      "type": "string",
+      "defaultValue": "Secret:",
+      "metadata": {
+        "description": "Label for the secret."
+      }
+    },
+    "LINK_BELOW_TEXT": {
+      "type": "string",
+      "defaultValue": "Please remember to send this link to your technician.",
+      "metadata": {
+        "description": "Text below the link, reminding to send it to the technician."
+      }
+    },
+    "EXPIRY_SLIDER_COLOR": {
+      "type": "string",
+      "defaultValue": "#805ad5",
+      "metadata": {
+        "description": "Color for the expiry slider (#code or colour name)"
+      }
+    },
+    "TEXT_COLOR": {
+      "type": "string",
+      "defaultValue": "black",
+      "metadata": {
+        "description": "Text color (#code or colour name)"
+      }
+    },
+    "BUTTON_COLOR": {
+      "type": "string",
+      "defaultValue": "#805ad5",
+      "metadata": {
+        "description": "Button color (#code or colour name)"
+      }
+    },
+    "DELETE_BUTTON_COLOR": {
+      "type": "string",
+      "defaultValue": "#ff0000",
+      "metadata": {
+        "description": "Delete button color (#code or colour name)"
+      }
+    }
+  },
+  "variables": {
+    "containerImage": "ghcr.io/nickjongens/keyfade:latest",
+    "containerGroupName": "[format('keyfade-{0}', parameters('customerName'))]",
+    "keyVaultName": "[format('keyfade-{0}-kv', parameters('customerName'))]",
+    "frontendInternalPort": 9001,
+    "backendInternalPort": 9002,
+    "publicFrontendPort": 9001,
+    "publicBackendPort": 9002
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[variables('keyVaultName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "tenantId": "[parameters('TENANT_ID')]",
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "accessPolicies": [
+          {
+            "tenantId": "[parameters('TENANT_ID')]",
+            "objectId": "[parameters('CLIENT_ID')]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list",
+                "set",
+                "delete",
+                "recover"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2021-09-01",
+      "name": "[variables('containerGroupName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "osType": "Linux",
+        "containers": [
+          {
+            "name": "[variables('containerGroupName')]",
+            "properties": {
+              "image": "[variables('containerImage')]",
+              "resources": {
+                "requests": {
+                  "cpu": "[parameters('cpu')]",
+                  "memoryInGB": "[parameters('memory')]"
+                }
+              },
+              "ports": [
+                {
+                  "port": "[variables('frontendInternalPort')]"
+                },
+                {
+                  "port": "[variables('backendInternalPort')]"
+                }
+              ],
+              "environmentVariables": [
+                {
+                  "name": "CLIENT_ID",
+                  "value": "[parameters('CLIENT_ID')]"
+                },
+                {
+                  "name": "TENANT_ID",
+                  "value": "[parameters('TENANT_ID')]"
+                },
+                {
+                  "name": "CLIENT_SECRET",
+                  "secureValue": "[parameters('CLIENT_SECRET')]"
+                },
+                {
+                  "name": "HMAC_SECRET",
+                  "secureValue": "[parameters('HMAC_SECRET')]"
+                },
+                {
+                  "name": "KEY_VAULT_NAME",
+                  "value": "[variables('keyVaultName')]"
+                },
+                {
+                  "name": "BACKEND_URL",
+                  "value": "[parameters('BACKEND_URL')]"
+                },
+                {
+                  "name": "FRONTEND_URL",
+                  "value": "[parameters('FRONTEND_URL')]"
+                },
+                {
+                  "name": "LOGO_URL",
+                  "value": "[parameters('LOGO_URL')]"
+                },
+                {
+                  "name": "FAVICON_URL",
+                  "value": "[parameters('FAVICON_URL')]"
+                },
+                {
+                  "name": "CREATE_PASSWORD_LABEL",
+                  "value": "[parameters('CREATE_PASSWORD_LABEL')]"
+                },
+                {
+                  "name": "CREATE_EXPIRY_OPTIONS_LABEL",
+                  "value": "[parameters('CREATE_EXPIRY_OPTIONS_LABEL')]"
+                },
+                {
+                  "name": "LINK_GENERATED_LABEL",
+                  "value": "[parameters('LINK_GENERATED_LABEL')]"
+                },
+                {
+                  "name": "LINK_COPY_LABEL",
+                  "value": "[parameters('LINK_COPY_LABEL')]"
+                },
+                {
+                  "name": "SECRET_LABEL",
+                  "value": "[parameters('SECRET_LABEL')]"
+                },
+                {
+                  "name": "LINK_BELOW_TEXT",
+                  "value": "[parameters('LINK_BELOW_TEXT')]"
+                },
+                {
+                  "name": "EXPIRY_SLIDER_COLOR",
+                  "value": "[parameters('EXPIRY_SLIDER_COLOR')]"
+                },
+                {
+                  "name": "TEXT_COLOR",
+                  "value": "[parameters('TEXT_COLOR')]"
+                },
+                {
+                  "name": "BUTTON_COLOR",
+                  "value": "[parameters('BUTTON_COLOR')]"
+                },
+                {
+                  "name": "DELETE_BUTTON_COLOR",
+                  "value": "[parameters('DELETE_BUTTON_COLOR')]"
+                }
+              ]
+            }
+          }
+        ],
+        "ipAddress": {
+          "type": "Public",
+          "ports": [
+            {
+              "protocol": "TCP",
+              "port": "[variables('publicFrontendPort')]"
+            },
+            {
+              "protocol": "TCP",
+              "port": "[variables('publicBackendPort')]"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "containerGroupName": {
+      "type": "string",
+      "value": "[variables('containerGroupName')]"
+    },
+    "keyVaultName": {
+      "type": "string",
+      "value": "[variables('keyVaultName')]"
+    },
+    "internalFrontendPort": {
+      "type": "int",
+      "value": "[variables('frontendInternalPort')]"
+    },
+    "internalBackendPort": {
+      "type": "int",
+      "value": "[variables('backendInternalPort')]"
+    },
+    "exposedFrontendPort": {
+      "type": "int",
+      "value": "[variables('publicFrontendPort')]"
+    },
+    "exposedBackendPort": {
+      "type": "int",
+      "value": "[variables('publicBackendPort')]"
+    },
+    "keyVaultUri": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), '2021-06-01-preview').vaultUri]"
+    }
+  }
+}

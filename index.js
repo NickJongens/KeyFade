@@ -6,6 +6,8 @@ const cors = require('cors');
 const logger = require('./backend/config/logger'); // Adjust the path as needed
 const { corsOptions, handleCorsErrors } = require('./backend/config/cors');
 const secretRoutes = require('./backend/routes/secretRoutes');
+const { scheduleKeyVaultCleanup } = require('./backend/services/keyVaultCleanup');
+scheduleKeyVaultCleanup();
 
 // -------------------------------
 // Start Backend Server (API) on port 9002
