@@ -111,6 +111,10 @@ There are no API permissions to be given here. These are provided in the Key Vau
 
 8. Add the values above to the docker run command, or docker-compose file, then **deploy your container**.
 
+OR After Step 7, deploy directly to Microsoft Azure:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FNickJongens%2FKeyFade%2Frefs%2Fheads%2Fmain%2Fazure.json)
+
 # Recommendations/Options
 - Setup a Cloudflare tunnel to point to a self-hosted container for both the frontend and backend ports.
 - Setup an Azure Kubernetes Cluster behind a load balancer to provide public access to each service.
