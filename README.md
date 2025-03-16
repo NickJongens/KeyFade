@@ -23,30 +23,36 @@ This service is built using the following technologies:
 - **Axios:** HTTP client for sending webhook notifications.
 - **Winston:** Logging library for structured and configurable logging.
 
-### Environment Variables:
+## Environment Variables
 
-  CLIENT_ID:
-  AzureClient/App ID for authentication
+The following environment variables are essential to configure and secure your KeyFade deployment. Each variable plays a crucial role in authentication, system configuration, and UI customisation. Ensure you set these correctly to maintain a secure and reliable service.
 
-  CLIENT_SECRET:
-  Secret key associated with the Client/App ID
+| Variable                      | Description                                                                                                                                   | Example Value                                      |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| `CLIENT_ID`                   | Your Azure Client/App ID used for authentication.                                                                                           | `12345678-9abc-def0-1234-56789abcdef0`               |
+| `CLIENT_SECRET`               | The secret key associated with your Azure Client/App ID.                                                                                     | `YourClientSecretHere`                              |
+| `TENANT_ID`                   | Your Azure Active Directory Tenant ID.                                                                                                       | `abcdefgh-ijkl-mnop-qrst-uvwxyz012345`             |
+| `KEY_VAULT_NAME`              | The name of your Azure Key Vault (omit the full URL) where secrets are securely stored.                                                        | `myKeyVault`                                       |
+| `BACKEND_URL`                 | The URL of the backend service.                                                                                                               | `https://demo-api.keyfade.com`                      |
+| `FRONTEND_URL`                | The URL of the frontend service.                                                                                                              | `https://demo.keyfade.com`                          |
+| `HMAC_SECRET`                 | A shared secret for HMAC validation between the frontend and backend, ensuring secure communication.                                           | `YourHMACSecret`                                    |
+| `WEBHOOK_URL`                 | The URL for the Microsoft Teams webhook used for notifications (e.g., rate limiting alerts, security updates, server start-up).                  | `https://outlook.office.com/webhook/your-webhook-url` |
+| `TITLE_TEXT`                  | The title displayed on the frontend interface.                                                                                              | `KeyFade - Demo`                                   |
+| `CREATE_PASSWORD_LABEL`       | The label for the secret input field.                                                                                                        | `Secret to Encrypt:`                               |
+| `CREATE_EXPIRY_OPTIONS_LABEL` | The label used for presenting expiry options to the user.                                                                                   | `Expiry Options:`                                  |
+| `LINK_GENERATED_LABEL`        | The label shown for the generated encrypted link.                                                                                           | `Encrypted Link:`                                  |
+| `LINK_COPY_LABEL`             | The label for the button that copies the encrypted link.                                                                                    | `Copy Link`                                        |
+| `SECRET_LABEL`                | The label displayed when showing the secret.                                                                                                | `Secret:`                                          |
+| `LINK_BELOW_TEXT`             | Instructional text displayed below the generated link.                                                                                      | `Please remember to send this link to your technician.` |
+| `EXPIRY_SLIDER_COLOR`         | The colour of the expiry slider UI element.                                                                                                 | `black`                                            |
+| `TEXT_COLOR`                  | The primary text colour used throughout the user interface.                                                                                 | `black`                                            |
+| `BUTTON_COLOR`                | The standard colour for UI buttons.                                                                                                          | `black`                                            |
+| `DELETE_BUTTON_COLOR`         | The colour for delete action buttons.                                                                                                        | `red`                                              |
+| `LOGO_URL`                    | The URL of the logo image displayed on the frontend.                                                                                        | `https://public.keyfade.com/logo.png`              |
+| `FAVICON_URL`                 | The URL of the favicon used in the browser tab.                                                                                              | `https://demo.keyfade.com/favicon.ico`             |
 
-  TENANT_ID:
-  Your Azure Active Directory Tenant ID
-  KEY_VAULT_NAME:
-  Name of the Key Vault used for secure data storage without the full url
-  
-  BACKEND_URL:
-  URL of the backend (e.g., https://demo-api.keyfade.com)
+> **Note:** Ensure that all sensitive values, such as `CLIENT_SECRET` and `HMAC_SECRET`, are stored securely and never exposed publicly.
 
-  FRONTEND_URL:
-  URL of the frontend (e.g., https://demo.keyfade.com)
-
-  HMAC_SECRET:
-  Secret key shared between the frontend and backend for HMAC validation
-  
-  WEBHOOK_URL:	
-  URL of the Microsoft Teams Webhook for notifications
 
 ## Build & Run
 
@@ -85,25 +91,22 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   ghcr.io/nickjongens/keyfade:latest
 ```
 
-## Azure Key Vault Setup
+## Azure Setup
 
-1. Setup an Azure Key Vault (Free or close to free - less than $0.10 a month with typical usage)
+1. Create an App Registration in [Entra ID - App Registrations](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade/quickStartType~/null/sourceType/Microsoft_AAD_IAM)
 
-2. Create an App Registration in [Entra ID - App Registrations](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade/quickStartType~/null/sourceType/Microsoft_AAD_IAM)
+2. Note down the **'Application (client) ID'**
 
-3. Note down the **'Application (client) ID'**
+3. Note down the **'Directory (tenant) ID'**
 
-4. Note down the **'Directory (tenant) ID'**
-
-5. Create a **'New Client secret'** under **'Certificates & secrets'** and copy the **Value**, not the ID.
+4. Create a **'New Client secret'** under **'Certificates & secrets'** and copy the **Value**, not the ID.
    This will be your Client_Secret for deploying.
 
 There are no API permissions to be given here. These are provided in the Key Vault.
 
-7. Setup an **'Access Policy'** within your Azure Key Vault with 'Configure from a template > Secret Management'.
-  Use the **'Application (client) ID'** or **'Application Name'** to search for a principle to add permissions to the key vault.
+5. Deploy the Azure Key Vault and container directly to Microsoft Azure:
 
-8. Add the values above to the docker run command, or docker-compose file, then **deploy your container**.
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FNickJongens%2FKeyFade%2Frefs%2Fheads%2Fmain%2Fazure.json)
 
 # Recommendations/Options
 - Setup a Cloudflare tunnel to point to a self-hosted container for both the frontend and backend ports.
