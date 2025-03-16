@@ -33,7 +33,6 @@ const handleCorsErrors = (err, req, res, next) => {
       method: req.method,
     };
     logger.error(`CORS error: ${err.message}`, errorDetails);
-    sendWebhookNotification('CORS Error', errorDetails);
     return res.status(403).json({ error: 'CORS access denied' });
   }
   next(); // No CORS error, move on
