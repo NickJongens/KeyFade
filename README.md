@@ -23,36 +23,50 @@ This service is built using the following technologies:
 - **Axios:** HTTP client for sending webhook notifications.
 - **Winston:** Logging library for structured and configurable logging.
 
-## Environment Variables
+# Environment Variables
 
 The following environment variables are essential to configure and secure your KeyFade deployment. Each variable plays a crucial role in authentication, system configuration, and UI customisation. Ensure you set these correctly to maintain a secure and reliable service.
 
-| Variable                      | Description                                                                                                                                   | Example Value                                      |
-|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
-| `CLIENT_ID`                   | Your Azure Client/App ID used for authentication.                                                                                           | `12345678-9abc-def0-1234-56789abcdef0`               |
-| `CLIENT_SECRET`               | The secret key associated with your Azure Client/App ID.                                                                                     | `YourClientSecretHere`                              |
-| `TENANT_ID`                   | Your Azure Active Directory Tenant ID.                                                                                                       | `abcdefgh-ijkl-mnop-qrst-uvwxyz012345`             |
-| `KEY_VAULT_NAME`              | The name of your Azure Key Vault (omit the full URL) where secrets are securely stored.                                                        | `myKeyVault`                                       |
-| `BACKEND_URL`                 | The URL of the backend service.                                                                                                               | `https://demo-api.keyfade.com`                      |
-| `FRONTEND_URL`                | The URL of the frontend service.                                                                                                              | `https://demo.keyfade.com`                          |
-| `HMAC_SECRET`                 | A shared secret for HMAC validation between the frontend and backend, ensuring secure communication.                                           | `YourHMACSecret`                                    |
-| `WEBHOOK_URL`                 | The URL for the Microsoft Teams webhook used for notifications (e.g., rate limiting alerts, security updates, server start-up).                  | `https://outlook.office.com/webhook/your-webhook-url` |
-| `TITLE_TEXT`                  | The title displayed on the frontend interface.                                                                                              | `KeyFade - Demo`                                   |
-| `CREATE_PASSWORD_LABEL`       | The label for the secret input field.                                                                                                        | `Secret to Encrypt:`                               |
-| `CREATE_EXPIRY_OPTIONS_LABEL` | The label used for presenting expiry options to the user.                                                                                   | `Expiry Options:`                                  |
-| `LINK_GENERATED_LABEL`        | The label shown for the generated encrypted link.                                                                                           | `Encrypted Link:`                                  |
-| `LINK_COPY_LABEL`             | The label for the button that copies the encrypted link.                                                                                    | `Copy Link`                                        |
-| `SECRET_LABEL`                | The label displayed when showing the secret.                                                                                                | `Secret:`                                          |
-| `LINK_BELOW_TEXT`             | Instructional text displayed below the generated link.                                                                                      | `Please remember to send this link to your technician.` |
-| `EXPIRY_SLIDER_COLOR`         | The colour of the expiry slider UI element.                                                                                                 | `black`                                            |
-| `TEXT_COLOR`                  | The primary text colour used throughout the user interface.                                                                                 | `black`                                            |
-| `BUTTON_COLOR`                | The standard colour for UI buttons.                                                                                                          | `black`                                            |
-| `DELETE_BUTTON_COLOR`         | The colour for delete action buttons.                                                                                                        | `red`                                              |
-| `LOGO_URL`                    | The URL of the logo image displayed on the frontend.                                                                                        | `https://public.keyfade.com/logo.png`              |
-| `FAVICON_URL`                 | The URL of the favicon used in the browser tab.                                                                                              | `https://demo.keyfade.com/favicon.ico`             |
+| Variable               | Description                                                                                                                                                           | Example Value                                      |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| `CLIENT_ID`            | Your Azure Client/App ID used for authentication.                                                                                                                   | `12345678-9abc-def0-1234-56789abcdef0`               |
+| `CLIENT_SECRET`        | The secret key associated with your Azure Client/App ID.                                                                                                             | `YourClientSecretHere`                              |
+| `TENANT_ID`            | Your Azure Active Directory Tenant ID.                                                                                                                               | `abcdefgh-ijkl-mnop-qrst-uvwxyz012345`             |
+| `KEY_VAULT_NAME`       | The name of your Azure Key Vault (omit the full URL) where secrets are securely stored.                                                                               | `myKeyVault`                                       |
+| `BACKEND_URL`          | The URL of the backend service.                                                                                                                                       | `https://demo-api.keyfade.com`                      |
+| `FRONTEND_URL`         | The URL of the frontend service. This URL is always allowed for CORS, regardless of any additional CORS configuration.                                                 | `https://demo.keyfade.com`                          |
+| `CORS_ALLOWED_ORIGINS` | (Optional) A comma-separated list of additional origins allowed to access the API. Set to `*` to allow all origins. These origins are allowed in addition to the always-permitted `FRONTEND_URL`. | `http://localhost:3000,http://example.com`         |
+| `HMAC_SECRET`          | A shared secret for HMAC validation between the frontend and backend, ensuring secure communication.                                                                 | `YourHMACSecret`                                    |
+| `WEBHOOK_URL`          | The URL for the Microsoft Teams webhook used for notifications (e.g., rate limiting alerts, security updates, server start-up).                                          | `https://outlook.office.com/webhook/your-webhook-url` |
+| `TITLE_TEXT`           | The title displayed on the frontend interface.                                                                                                                      | `KeyFade - Demo`                                   |
+| `CREATE_PASSWORD_LABEL`| The label for the secret input field.                                                                                                                                | `Secret to Encrypt:`                               |
+| `CREATE_EXPIRY_OPTIONS_LABEL` | The label used for presenting expiry options to the user.                                                                                                    | `Expiry Options:`                                  |
+| `LINK_GENERATED_LABEL` | The label shown for the generated encrypted link.                                                                                                                   | `Encrypted Link:`                                  |
+| `LINK_COPY_LABEL`      | The label for the button that copies the encrypted link.                                                                                                            | `Copy Link`                                        |
+| `SECRET_LABEL`         | The label displayed when showing the secret.                                                                                                                        | `Secret:`                                          |
+| `LINK_BELOW_TEXT`      | Instructional text displayed below the generated link.                                                                                                              | `Please remember to send this link to your technician.` |
+| `EXPIRY_SLIDER_COLOR`  | The colour of the expiry slider UI element.                                                                                                                         | `black`                                            |
+| `TEXT_COLOR`           | The primary text colour used throughout the user interface.                                                                                                         | `black`                                            |
+| `BUTTON_COLOR`         | The standard colour for UI buttons.                                                                                                                                  | `black`                                            |
+| `DELETE_BUTTON_COLOR`  | The colour for delete action buttons.                                                                                                                                | `red`                                              |
+| `LOGO_URL`             | The URL of the logo image displayed on the frontend.                                                                                                               | `https://public.keyfade.com/logo.png`              |
+| `FAVICON_URL`          | The URL of the favicon used in the browser tab.                                                                                                                     | `https://demo.keyfade.com/favicon.ico`             |
 
 > **Note:** Ensure that all sensitive values, such as `CLIENT_SECRET` and `HMAC_SECRET`, are stored securely and never exposed publicly.
 
+---
+
+## How the CORS Environment Variables Work
+
+- **`FRONTEND_URL`:**  
+  This variable defines your primary frontend URL, which is always allowed in your CORS configuration. It ensures that your main frontend can access the API regardless of other settings.
+
+- **`CORS_ALLOWED_ORIGINS`:**  
+  This optional variable allows you to specify additional origins that are permitted to access your API:
+  - **Wildcard (`*`):**  
+    Setting the value to `*` permits all origins. (This goes against security best-practice and is not recommended)
+  - **Comma-Separated List:**  
+    When specifying particular origins (e.g., `http://localhost:3000,http://example.com`), only those origins (in addition to the `FRONTEND_URL`) are allowed.
 
 ## Build & Run
 

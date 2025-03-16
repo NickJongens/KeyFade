@@ -58,6 +58,7 @@ const templateVars = {
   HMAC_SECRET: process.env.HMAC_SECRET,
   BACKEND_URL: process.env.BACKEND_URL,
   FRONTEND_URL: process.env.FRONTEND_URL,
+  CORS_ALLOWED_ORIGINS: process.env.CORS_ALLOWED_ORIGINS,
   FAVICON_URL: process.env.FAVICON_URL,
   TITLE_TEXT: process.env.TITLE_TEXT,
   CREATE_PASSWORD_LABEL: process.env.CREATE_PASSWORD_LABEL,
