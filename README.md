@@ -91,27 +91,20 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   ghcr.io/nickjongens/keyfade:latest
 ```
 
-## Azure Key Vault Setup
+## Azure Setup
 
-1. Setup an Azure Key Vault (Free or close to free - less than $0.10 a month with typical usage)
+1. Create an App Registration in [Entra ID - App Registrations](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade/quickStartType~/null/sourceType/Microsoft_AAD_IAM)
 
-2. Create an App Registration in [Entra ID - App Registrations](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade/quickStartType~/null/sourceType/Microsoft_AAD_IAM)
+2. Note down the **'Application (client) ID'**
 
-3. Note down the **'Application (client) ID'**
+3. Note down the **'Directory (tenant) ID'**
 
-4. Note down the **'Directory (tenant) ID'**
-
-5. Create a **'New Client secret'** under **'Certificates & secrets'** and copy the **Value**, not the ID.
+4. Create a **'New Client secret'** under **'Certificates & secrets'** and copy the **Value**, not the ID.
    This will be your Client_Secret for deploying.
 
 There are no API permissions to be given here. These are provided in the Key Vault.
 
-7. Setup an **'Access Policy'** within your Azure Key Vault with 'Configure from a template > Secret Management'.
-  Use the **'Application (client) ID'** or **'Application Name'** to search for a principle to add permissions to the key vault.
-
-8. Add the values above to the docker run command, or docker-compose file, then **deploy your container**.
-
-OR After Step 7, deploy directly to Microsoft Azure:
+5. Deploy the Azure Key Vault and container directly to Microsoft Azure:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FNickJongens%2FKeyFade%2Frefs%2Fheads%2Fmain%2Fazure.json)
 
