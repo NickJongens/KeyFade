@@ -4,6 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><%= TITLE_TEXT || 'KeyFade' %></title>
+    
+    <!-- Prevent SEO indexing -->
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <!-- Open Graph Meta Tags for link previews -->
+    <meta property="og:title" content="<%= TITLE_TEXT || 'KeyFade' %>" />
+    <meta property="og:description" content="<%= METADATA_CONTENT_DESCRIPTION || 'For assistance, please contact support.' %>" />
+    <meta property="og:image" content="<%= LOGO_URL || 'https://demo.keyfade.com/favicon.ico' %>" />
+    <meta property="og:url" content="<%= FRONTEND_URL %>" />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card Meta Tags for link previews -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<%= TITLE_TEXT || 'KeyFade' %>" />
+    <meta name="twitter:description" content="<%= METADATA_CONTENT_DESCRIPTION || 'For assistance, please contact support.' %>" />
+    <meta name="twitter:image" content="<%= LOGO_URL || 'https://public.keyfade.com/logo.png' %>" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<%= FRONTEND_URL %>" />
+
     <!-- Import Google Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
@@ -27,8 +47,10 @@
     <div class="container">
       <header class="header">
         <!-- Dynamically inject the logo URL safely -->
-        <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
-          <img src="<%= logoUrl %>" alt="Logo" class="logo" />
+        <% if (typeof LOGO_URL !== 'undefined' && LOGO_URL) { %>
+          <a href="<%= FRONTEND_URL %>">
+            <img src="<%= LOGO_URL %>" alt="Logo" class="logo" />
+          </a>
         <% } %>
       </header>
 

@@ -53,7 +53,7 @@ frontendApp.use(express.static(path.join(__dirname, 'frontend', 'public')));
 
 // Common variables from .env for EJS template rendering
 const templateVars = {
-  logoUrl: process.env.LOGO_URL,
+  LOGO_URL: process.env.LOGO_URL,
   expirySliderColor: process.env.EXPIRY_SLIDER_COLOR || '#805ad5',
   HMAC_SECRET: process.env.HMAC_SECRET,
   BACKEND_URL: process.env.BACKEND_URL,
@@ -72,6 +72,7 @@ const templateVars = {
   NOT_FOUND_BUTTON_COLOR: process.env.NOT_FOUND_BUTTON_COLOR,
   DELETE_BUTTON_COLOR: process.env.DELETE_BUTTON_COLOR,
   GENERATE_LINK_LABEL: process.env.GENERATE_LINK_LABEL,
+  METADATA_CONTENT_DESCRIPTION: process.env.METADATA_CONTENT_DESCRIPTION,
 };
 
 // Render the index page (Create and Link states)

@@ -44,11 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
   linkState.classList.add('hidden');
   viewState.classList.add('hidden');
 
-  // Update expiry label on slider input
-  expirySlider.addEventListener('input', () => {
+  // Update expiry label and slider background on slider input
+  // Update expiry label and slider background on slider input
+  function updateSlider() {
     const index = parseInt(expirySlider.value, 10);
     expiryLabel.textContent = expiryLabels[index];
-  });
+
+    const value = expirySlider.value;
+    const min = expirySlider.min;
+    const max = expirySlider.max;
+    const percentage = ((value - min) / (max - min)) * 100;
+
+    // Update the slider's custom property for fill percentage
+    expirySlider.style.setProperty('--slider-percentage', percentage + '%');
+  }
+  expirySlider.addEventListener('input', updateSlider);
+  // Initialize slider style on page load
+  updateSlider();
+
 
   // Create secret: submit form
   createForm.addEventListener('submit', async (e) => {
@@ -169,10 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
             secretValue.textContent = data.value;
             // Display days remaining notification if available
             if (data.daysLeft !== undefined && data.daysLeft !== null) {
-              if (data.daysLeft === 1) {
+              const daysLeftRounded = Math.floor(data.daysLeft);
+              if (daysLeftRounded <= 1) {
                 showToast('Link expiring today!');
               } else {
-                showToast(`Link valid for ${data.daysLeft} Days`);
+                showToast(`Link valid for ${daysLeftRounded} Days`);
               }
             }
           } else {
