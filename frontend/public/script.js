@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.style.opacity = '1';
     setTimeout(() => {
       toast.style.opacity = '0';
-    }, 2000);
+    }, 4000);
   }
 
   let warningShown = false;
