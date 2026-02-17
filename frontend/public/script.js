@@ -58,10 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   if (secretInput) {
     secretInput.type = 'text';
-    secretInput.addEventListener('input', showSecretTemporarily);
+    secretInput.addEventListener('input', () => {
+      maybeWarn(secretInput.value);
+      showSecretTemporarily();
+    });
     secretInput.addEventListener('paste', (e) => {
       const pastedText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
-      checkPasteWarning(pastedText);
+      maybeWarn(pastedText);
       showSecretTemporarily();
     });
     secretInput.addEventListener('focus', () => {
@@ -183,12 +186,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
   }
 
-  function checkPasteWarning(pastedText) {
-    if (!pastedText) return;
-    const containsKeyword = /\b(username|email)\b/i.test(pastedText);
-    const looksLikeEmail = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(pastedText);
-    if (containsKeyword || looksLikeEmail) {
-      showToast('Warning: You pasted a username or email. Ensure you send user information separately.', 'warning');
+  let warningShown = false;
+  function shouldWarn(text) {
+    if (!text) return false;
+    const containsKeyword = /\b(username|email)\b/i.test(text);
+    const looksLikeEmail = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(text);
+    return containsKeyword || looksLikeEmail;
+  }
+
+  function maybeWarn(text) {
+    const needsWarning = shouldWarn(text);
+    if (needsWarning && !warningShown) {
+      showToast('Warning: Username or email detected. Ensure you send user information separately.', 'warning');
+      warningShown = true;
+    } else if (!needsWarning) {
+      warningShown = false;
     }
   }
 
