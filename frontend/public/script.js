@@ -43,6 +43,43 @@ document.addEventListener('DOMContentLoaded', () => {
   linkState.classList.add('hidden');
   viewState.classList.add('hidden');
 
+  // Show the secret while typing, then mask after a short delay
+  const MASK_DELAY_MS = 5000;
+  let maskTimerId;
+  const showSecretTemporarily = () => {
+    if (!secretInput) return;
+    if (maskTimerId) {
+      clearTimeout(maskTimerId);
+    }
+    secretInput.type = 'text';
+    maskTimerId = setTimeout(() => {
+      secretInput.type = 'password';
+    }, MASK_DELAY_MS);
+  };
+  if (secretInput) {
+    secretInput.type = 'text';
+    secretInput.addEventListener('input', showSecretTemporarily);
+    secretInput.addEventListener('paste', (e) => {
+      const pastedText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+      checkPasteWarning(pastedText);
+      showSecretTemporarily();
+    });
+    secretInput.addEventListener('focus', () => {
+      if (secretInput.value) {
+        showSecretTemporarily();
+      }
+    });
+    secretInput.addEventListener('blur', () => {
+      if (maskTimerId) {
+        clearTimeout(maskTimerId);
+        maskTimerId = null;
+      }
+      if (secretInput.value) {
+        secretInput.type = 'password';
+      }
+    });
+  }
+
   // Update expiry label and slider background on slider input
   // Update expiry label and slider background on slider input
   function updateSlider() {
@@ -116,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Helper function: show a non-intrusive toast message
-  function showToast(message) {
+  function showToast(message, variant = 'info') {
     let toast = document.getElementById('toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -125,8 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.style.bottom = '20px';
       toast.style.left = '50%';
       toast.style.transform = 'translateX(-50%)';
-      toast.style.background = 'rgba(0,0,0,0.7)';
-      toast.style.color = '#fff';
       toast.style.padding = '10px 20px';
       toast.style.borderRadius = '4px';
       toast.style.fontSize = '0.9rem';
@@ -134,11 +169,27 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.style.transition = 'opacity 0.5s ease-in-out';
       document.body.appendChild(toast);
     }
+    if (variant === 'warning') {
+      toast.style.background = '#f59e0b';
+      toast.style.color = '#111827';
+    } else {
+      toast.style.background = 'rgba(0,0,0,0.7)';
+      toast.style.color = '#fff';
+    }
     toast.textContent = message;
     toast.style.opacity = '1';
     setTimeout(() => {
       toast.style.opacity = '0';
     }, 2000);
+  }
+
+  function checkPasteWarning(pastedText) {
+    if (!pastedText) return;
+    const containsKeyword = /\b(username|email)\b/i.test(pastedText);
+    const looksLikeEmail = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(pastedText);
+    if (containsKeyword || looksLikeEmail) {
+      showToast('Warning: You pasted a username or email. Ensure you send user information separately.', 'warning');
+    }
   }
 
   // If URL is in the format /:id/:key, switch to View State
