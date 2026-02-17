@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Get injected environment variables
-  const HMAC_SECRET = window.HMAC_SECRET;
   const BACKEND_URL = window.BACKEND_URL;
   const FRONTEND_URL = window.FRONTEND_URL;
 
@@ -142,64 +141,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
   }
 
-  // Helper function: compute HMAC signature using Web Crypto API
-  async function computeHMAC(message, secret) {
-    const enc = new TextEncoder();
-    const keyData = enc.encode(secret);
-    const cryptoKey = await crypto.subtle.importKey(
-      "raw",
-      keyData,
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"]
-    );
-    const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, enc.encode(message));
-    const signatureArray = Array.from(new Uint8Array(signatureBuffer));
-    return signatureArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
   // If URL is in the format /:id/:key, switch to View State
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   if (pathParts.length === 2) {
     const secretId = pathParts[0];
     const secretKey = pathParts[1];
     const originalUrl = `/api/secrets/${secretId}/${secretKey}`;
-    // Remove protocol from BACKEND_URL for HMAC calculation
-    const backendHost = BACKEND_URL.replace(/^https?:\/\//, '');
-    const baseString = "GET" + backendHost + originalUrl;
     // Switch to view state
     createState.classList.add('hidden');
     linkState.classList.add('hidden');
     viewState.classList.remove('hidden');
-    // Fetch secret with HMAC signature
-    computeHMAC(baseString, HMAC_SECRET).then(signature => {
-      fetch(`${BACKEND_URL}${originalUrl}`, {
-        headers: { 'x-signature': signature }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.value) {
-            secretValue.textContent = data.value;
-            // Display days remaining notification if available
-            if (data.daysLeft !== undefined && data.daysLeft !== null) {
-              const daysLeftRounded = Math.floor(data.daysLeft);
-              if (daysLeftRounded <= 1) {
-                showToast('Link expiring today!');
-              } else {
-                showToast(`Link valid for ${daysLeftRounded} Days`);
-              }
+    // Fetch secret
+    fetch(`${BACKEND_URL}${originalUrl}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.value) {
+          secretValue.textContent = data.value;
+          // Display days remaining notification if available
+          if (data.daysLeft !== undefined && data.daysLeft !== null) {
+            const daysLeftRounded = Math.floor(data.daysLeft);
+            if (daysLeftRounded <= 1) {
+              showToast('Link expiring today!');
+            } else {
+              showToast(`Link valid for ${daysLeftRounded} Days`);
             }
-          } else {
-            showToast('Secret not found or expired.');
-            secretValue.textContent = 'Secret Expired or Deleted';
           }
-        })
-        .catch(err => {
-          console.error(err);
-          showToast('Error retrieving secret.');
+        } else {
+          showToast('Secret not found or expired.');
           secretValue.textContent = 'Secret Expired or Deleted';
-        });
-    });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        showToast('Error retrieving secret.');
+        secretValue.textContent = 'Secret Expired or Deleted';
+      });
 
     // Delete secret functionality in View State with double-click confirmation
     deleteButton.addEventListener('click', () => {
@@ -217,28 +193,24 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // If confirmed, clear the timer and proceed with deletion
       clearTimeout(deleteTimer);
-      const deleteBaseString = "DELETE" + backendHost + originalUrl;
-      computeHMAC(deleteBaseString, HMAC_SECRET).then(signature => {
-        fetch(`${BACKEND_URL}${originalUrl}`, {
-          method: 'DELETE',
-          headers: { 'x-signature': signature }
+      fetch(`${BACKEND_URL}${originalUrl}`, {
+        method: 'DELETE'
+      })
+        .then(res => res.json())
+        .then(data => {
+          showToast(data.message);
+          deleteButton.disabled = true;
+          // Immediately update secret box text if deletion is successful
+          secretValue.textContent = 'Secret Expired or Deleted';
+          // After 2 seconds, redirect to the home page
+          setTimeout(() => {
+            window.location.href = FRONTEND_URL;
+          }, 2000);
         })
-          .then(res => res.json())
-          .then(data => {
-            showToast(data.message);
-            deleteButton.disabled = true;
-            // Immediately update secret box text if deletion is successful
-            secretValue.textContent = 'Secret Expired or Deleted';
-            // After 2 seconds, redirect to the home page
-            setTimeout(() => {
-              window.location.href = FRONTEND_URL;
-            }, 2000);
-          })
-          .catch(err => {
-            console.error(err);
-            showToast('Error deleting secret.');
-          });
-      });
+        .catch(err => {
+          console.error(err);
+          showToast('Error deleting secret.');
+        });
     });
   }
 });

@@ -41,4 +41,3 @@ A successful request returns a `201 Created` status with a JSON response contain
   "fullUrl": "https://demo.keyfade.com/9b1deb4d-3b7d-4f8d-a47a-3f4b98b2f5a7/e4f8a1d2b3c4d5e6"
 }
 ```
-**Note**, there is HMAC validation on all other endpoints and there is no plan to make the retrieval programmatic as a security-conscious design decision.

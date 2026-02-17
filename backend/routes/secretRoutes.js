@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { storeSecret, retrieveSecret, deleteSecret } = require('../controllers/secretController');
 const logger = require('../config/logger');
-const verifyHMAC = require('../services/hmacService'); // Import the HMAC verification middleware
 const { createRateLimiter } = require('../config/rateLimiter'); // Import the rate limiter middleware
 
-// Create secret (no HMAC verification, with rate limiting)
+// Create secret (with rate limiting)
 router.post('/create', createRateLimiter(), async (req, res) => {
     try {
         const secretData = req.body;
@@ -29,8 +28,8 @@ router.post('/create', createRateLimiter(), async (req, res) => {
     }
 });
 
-// Get secret (with HMAC verification and rate limiting)
-router.get('/secrets/:id/:key', verifyHMAC, createRateLimiter(), async (req, res) => {
+// Get secret (with rate limiting)
+router.get('/secrets/:id/:key', createRateLimiter(), async (req, res) => {
     try {
         const { id, key } = req.params;
         logger.info(`Fetching secret for ID: ${id}, Key: ${key}`);
@@ -46,8 +45,8 @@ router.get('/secrets/:id/:key', verifyHMAC, createRateLimiter(), async (req, res
     }
 });
 
-// Delete secret (with HMAC verification and rate limiting)
-router.delete('/secrets/:id/:key', verifyHMAC, createRateLimiter(), async (req, res) => {
+// Delete secret (with rate limiting)
+router.delete('/secrets/:id/:key', createRateLimiter(), async (req, res) => {
     try {
         const { id, key } = req.params;
         logger.info(`Deleting secret for ID: ${id}, Key: ${key}`);

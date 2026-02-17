@@ -13,9 +13,6 @@ const app = express();
 app.use(express.json());
 app.use(cors(corsOptions));
 
-// Apply HMAC verification middleware to all routes under /api/secrets
-app.use('/api/secrets');
-
 // Routes
 app.use('/api', secretRoutes); // Handle all secret operations under /api/
 

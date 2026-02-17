@@ -55,7 +55,6 @@ frontendApp.use(express.static(path.join(__dirname, 'frontend', 'public')));
 const templateVars = {
   LOGO_URL: process.env.LOGO_URL,
   expirySliderColor: process.env.EXPIRY_SLIDER_COLOR || '#805ad5',
-  HMAC_SECRET: process.env.HMAC_SECRET,
   BACKEND_URL: process.env.BACKEND_URL,
   FRONTEND_URL: process.env.FRONTEND_URL,
   CORS_ALLOWED_ORIGINS: process.env.CORS_ALLOWED_ORIGINS,

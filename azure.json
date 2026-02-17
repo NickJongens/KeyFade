@@ -33,12 +33,6 @@
         "description": "Entra ID Object/App Secret for Key Vault access (Application Secret)."
       }
     },
-    "HMAC_SECRET": {
-      "type": "securestring",
-      "metadata": {
-        "description": "HMAC Secret for cryptographic operations (must be set by customer)."
-      }
-    },
     "BACKEND_URL": {
       "type": "string",
       "metadata": {
@@ -224,10 +218,6 @@
                 {
                   "name": "CLIENT_SECRET",
                   "secureValue": "[parameters('CLIENT_SECRET')]"
-                },
-                {
-                  "name": "HMAC_SECRET",
-                  "secureValue": "[parameters('HMAC_SECRET')]"
                 },
                 {
                   "name": "KEY_VAULT_NAME",

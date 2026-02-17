@@ -36,7 +36,6 @@ The following environment variables are essential to configure and secure your K
 | `BACKEND_URL`          | The URL of the backend service.                                                                                                                                       | `https://demo-api.keyfade.com`                      |
 | `FRONTEND_URL`         | The URL of the frontend service. This URL is always allowed for CORS, regardless of any additional CORS configuration.                                                 | `https://demo.keyfade.com`                          |
 | `CORS_ALLOWED_ORIGINS` | (Optional) A comma-separated list of additional origins allowed to access the API. Set to `*` to allow all origins. These origins are allowed in addition to the always-permitted `FRONTEND_URL`. | `http://localhost:3000,http://example.com`         |
-| `HMAC_SECRET`          | A shared secret for HMAC validation between the frontend and backend, ensuring secure communication.                                                                 | `YourHMACSecret`                                    |
 | `WEBHOOK_URL`          | The URL for the Microsoft Teams webhook used for notifications (e.g., rate limiting alerts, security updates, server start-up).                                          | `https://outlook.office.com/webhook/your-webhook-url` |
 | `TITLE_TEXT`           | The title displayed on the frontend interface.                                                                                                                      | `KeyFade - Demo`                                   |
 | `CREATE_PASSWORD_LABEL`| The label for the secret input field.                                                                                                                                | `Secret to Encrypt:`                               |
@@ -52,7 +51,7 @@ The following environment variables are essential to configure and secure your K
 | `LOGO_URL`             | The URL of the logo image displayed on the frontend.                                                                                                               | `https://public.keyfade.com/logo.png`              |
 | `FAVICON_URL`          | The URL of the favicon used in the browser tab.                                                                                                                     | `https://demo.keyfade.com/favicon.ico`             |
 
-> **Note:** Ensure that all sensitive values, such as `CLIENT_SECRET` and `HMAC_SECRET`, are stored securely and never exposed publicly.
+> **Note:** Ensure that all sensitive values, such as `CLIENT_SECRET`, are stored securely and never exposed publicly.
 
 ---
 
@@ -87,7 +86,6 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   -e KEY_VAULT_NAME=<YOUR_AZURE_KEY_VAULT> \
   -e BACKEND_URL=https://demo-api.keyfade.com \
   -e FRONTEND_URL=https://demo.keyfade.com \
-  -e HMAC_SECRET=<YOUR_HMAC_SECRET> \
   -e WEBHOOK_URL=<YOUR_TEAMS_WEBHOOK_URL> \
   -e TITLE_TEXT=KeyFade - Demo \
   -e CREATE_PASSWORD_LABEL="Secret to Encrypt:" \
