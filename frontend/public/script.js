@@ -43,43 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
   linkState.classList.add('hidden');
   viewState.classList.add('hidden');
 
-  // Show the secret while typing, then mask after a short delay
-  const MASK_DELAY_MS = 5000;
-  let maskTimerId;
-  const showSecretTemporarily = () => {
-    if (!secretInput) return;
-    if (maskTimerId) {
-      clearTimeout(maskTimerId);
-    }
-    secretInput.type = 'text';
-    maskTimerId = setTimeout(() => {
-      secretInput.type = 'password';
-    }, MASK_DELAY_MS);
-  };
   if (secretInput) {
-    secretInput.type = 'text';
     secretInput.addEventListener('input', () => {
       maybeWarn(secretInput.value);
-      showSecretTemporarily();
     });
     secretInput.addEventListener('paste', (e) => {
       const pastedText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
       maybeWarn(pastedText);
-      showSecretTemporarily();
-    });
-    secretInput.addEventListener('focus', () => {
-      if (secretInput.value) {
-        showSecretTemporarily();
-      }
-    });
-    secretInput.addEventListener('blur', () => {
-      if (maskTimerId) {
-        clearTimeout(maskTimerId);
-        maskTimerId = null;
-      }
-      if (secretInput.value) {
-        secretInput.type = 'password';
-      }
     });
   }
 

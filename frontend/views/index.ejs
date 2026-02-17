@@ -56,10 +56,10 @@
 
       <!-- Create Secret State -->
       <div id="createState">
-        <form id="createForm">
+        <form id="createForm" autocomplete="off">
           <div class="form-group">
             <label for="secretInput"><%= CREATE_PASSWORD_LABEL || 'Secret to Encrypt:' %></label>
-            <input type="text" id="secretInput" placeholder="Enter a secret" required />
+            <input type="text" id="secretInput" placeholder="Enter a secret" required autocomplete="new-password" />
           </div>
           <div class="form-group">
             <label for="expirySlider"><%= CREATE_EXPIRY_OPTIONS_LABEL || 'Expiry Options:' %></label>

@@ -58,8 +58,7 @@ label {
   color: #555;
 }
 
-input[type="text"],
-input[type="password"] {
+input[type="text"] {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -69,15 +68,13 @@ input[type="password"] {
   text-align: center;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="text"]:focus {
   border-color: var(--button-color);
   box-shadow: 0 0 8px rgba(128, 90, 213, 0.3);
   outline: none;
 }
 
-input[type="text"]:focus::placeholder,
-input[type="password"]:focus::placeholder {
+input[type="text"]:focus::placeholder {
   color: transparent;
 }
 
