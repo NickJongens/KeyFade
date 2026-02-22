@@ -38,7 +38,7 @@ The following environment variables are essential to configure and secure your K
 | `FRONTEND_URL`         | The URL of the frontend service. This URL is always allowed for CORS, regardless of any additional CORS configuration.                                                 | `https://demo.keyfade.com`                          |
 | `CORS_ALLOWED_ORIGINS` | (Optional) A comma-separated list of additional origins allowed to access the API. Set to `*` to allow all origins. These origins are allowed in addition to the always-permitted `FRONTEND_URL`. | `http://localhost:3000,http://example.com`         |
 | `WEBHOOK_URL`          | The URL for the Microsoft Teams webhook used for notifications (e.g., rate limiting alerts, security updates, server start-up).                                          | `https://outlook.office.com/webhook/your-webhook-url` |
-| `TELEMETRY_API_TOKEN`  | (Optional) If set, telemetry endpoints on port `9003` require this token via `Authorization: Bearer <token>` or `x-telemetry-token`.                                      | `your-strong-token`                                |
+| `TELEMETRY_API_KEY`    | (Optional) API key for telemetry endpoints exposed from the backend API service. Supply via `x-api-key`, `x-telemetry-api-key`, or `Authorization: Bearer <key>`.         | `your-strong-api-key`                              |
 | `TELEMETRY_MAX_EVENTS` | (Optional) Maximum in-memory abuse events retained for telemetry snapshots.                                                                                                 | `500`                                              |
 | `TITLE_TEXT`           | The title displayed on the frontend interface.                                                                                                                      | `KeyFade - Demo`                                   |
 | `CREATE_PASSWORD_LABEL`| The label for the secret input field.                                                                                                                                | `Secret to Encrypt:`                               |
@@ -81,7 +81,7 @@ docker build -t keyfade:latest .
 Docker Run:
 
 ```
-docker run -d -p <frontendport>:9001 -p <backendport>:9002 -p <telemetryport>:9003 \
+docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
   --name keyfade \
   -e CLIENT_ID=<YOUR_CLIENT_ID> \
   -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> \
@@ -90,7 +90,7 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 -p <telemetryport>:90
   -e BACKEND_URL=https://demo-api.keyfade.com \
   -e FRONTEND_URL=https://demo.keyfade.com \
   -e WEBHOOK_URL=<YOUR_TEAMS_WEBHOOK_URL> \
-  -e TELEMETRY_API_TOKEN=<OPTIONAL_TELEMETRY_TOKEN> \
+  -e TELEMETRY_API_KEY=<YOUR_TELEMETRY_API_KEY> \
   -e TELEMETRY_MAX_EVENTS=500 \
   -e TITLE_TEXT=KeyFade - Demo \
   -e CREATE_PASSWORD_LABEL="Secret to Encrypt:" \
@@ -108,27 +108,24 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 -p <telemetryport>:90
   ghcr.io/nickjongens/keyfade:latest
 ```
 
-## Abuse Telemetry Dashboard (Port 9003)
+## Abuse Telemetry Dashboard (Port 9002 API Service)
 
-- `GET /status` checks telemetry service health.
-- `GET /telemetry/abuse` returns a live incident snapshot.
+- `GET /api/telemetry/abuse` returns a live incident snapshot.
 - Query options: `recentLimit`, `hotLimit`, and `targetLimit`.
 
 Examples:
 
 ```bash
-curl http://localhost:9003/telemetry/abuse
+curl http://localhost:9002/api/telemetry/abuse \
+  -H "x-api-key: <YOUR_TELEMETRY_API_KEY>"
 ```
 
 ```bash
-curl "http://localhost:9003/telemetry/abuse?recentLimit=100&hotLimit=20"
+curl "http://localhost:9002/api/telemetry/abuse?recentLimit=100&hotLimit=20" \
+  -H "Authorization: Bearer <YOUR_TELEMETRY_API_KEY>"
 ```
 
-If `TELEMETRY_API_TOKEN` is set, include one of:
-- `Authorization: Bearer <token>`
-- `x-telemetry-token: <token>`
-
-If `TELEMETRY_API_TOKEN` is not set, telemetry is open by design. For production, keep port `9003` private (VPN/internal network/IP allowlist) or set a token.
+If `TELEMETRY_API_KEY` is set, telemetry is protected by API key only on telemetry endpoints. If not set, telemetry defaults to open. Existing API endpoints are unchanged.
 
 ## Azure Setup
 
