@@ -6,6 +6,7 @@ const cors = require('cors');
 const logger = require('./backend/config/logger'); // Adjust the path as needed
 const { corsOptions, handleCorsErrors } = require('./backend/config/cors');
 const secretRoutes = require('./backend/routes/secretRoutes');
+const telemetryRoutes = require('./backend/routes/telemetryRoutes');
 const { scheduleKeyVaultCleanup } = require('./backend/cleanup/keyVaultCleanup');
 scheduleKeyVaultCleanup();
 
@@ -13,6 +14,8 @@ scheduleKeyVaultCleanup();
 // Start Backend Server (API) on port 9002
 // -------------------------------
 const backendApp = express();
+backendApp.disable('x-powered-by');
+backendApp.set('trust proxy', true);
 
 // Apply CORS with custom options and error handling
 backendApp.use(cors(corsOptions));
@@ -43,6 +46,7 @@ backendApp.listen(9002, () => {
 // Start Frontend Server (EJS) on port 9001
 // -------------------------------
 const frontendApp = express();
+frontendApp.disable('x-powered-by');
 
 // Set EJS as the templating engine and set the views folder
 frontendApp.set('view engine', 'ejs');
@@ -105,4 +109,35 @@ frontendApp.listen(9001, () => {
   logger.info('Frontend server listening on port 9001');
 });
 
-console.log("Servers running: Frontend on port 9001, Backend on port 9002");
+// -------------------------------
+// Start Telemetry Server on port 9003
+// -------------------------------
+const telemetryApp = express();
+telemetryApp.disable('x-powered-by');
+telemetryApp.set('trust proxy', true);
+
+const telemetryToken = process.env.TELEMETRY_API_TOKEN;
+const telemetryAuthMiddleware = (req, res, next) => {
+  if (!telemetryToken) return next();
+
+  const bearerToken = (req.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
+  const headerToken = (req.headers['x-telemetry-token'] || '').trim();
+  const providedToken = bearerToken || headerToken;
+
+  if (providedToken === telemetryToken) return next();
+  return res.status(401).json({ error: 'Unauthorized telemetry access' });
+};
+
+telemetryApp.get('/status', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date() });
+});
+
+telemetryApp.use('/telemetry', telemetryAuthMiddleware, telemetryRoutes);
+
+telemetryApp.listen(9003, () => {
+  logger.info('Telemetry server listening on port 9003', {
+    authEnabled: Boolean(telemetryToken),
+  });
+});
+
+console.log("Servers running: Frontend on port 9001, Backend on port 9002, Telemetry on port 9003");

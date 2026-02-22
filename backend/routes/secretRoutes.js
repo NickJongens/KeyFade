@@ -3,6 +3,7 @@ const router = express.Router();
 const { storeSecret, retrieveSecret, deleteSecret } = require('../controllers/secretController');
 const logger = require('../config/logger');
 const { createRateLimiter } = require('../config/rateLimiter'); // Import the rate limiter middleware
+const { getClientIp } = require('../utils/requestMeta');
 
 // Create secret (with rate limiting)
 router.post('/create', createRateLimiter(), async (req, res) => {
@@ -11,11 +12,19 @@ router.post('/create', createRateLimiter(), async (req, res) => {
 
         // Validate input
         if (!secretData || !secretData.value || typeof secretData.value !== 'string') {
-            logger.warn('Invalid secret data received:', { secretData });
+            logger.warn('Invalid secret payload', {
+                hasValue: Boolean(secretData && secretData.value),
+                valueType: typeof (secretData && secretData.value),
+                expiryDays: secretData && secretData.expiryDays,
+                ip: getClientIp(req),
+            });
             return res.status(400).json({ error: 'Secret value is required and must be a string' });
         }
 
-        logger.info('Creating secret:', { secretData });
+        logger.info('Creating secret request received', {
+            expiryDays: secretData.expiryDays,
+            ip: getClientIp(req),
+        });
 
         // Call the controller method to store the secret
         await storeSecret(req, res);
@@ -31,8 +40,8 @@ router.post('/create', createRateLimiter(), async (req, res) => {
 // Get secret (with rate limiting)
 router.get('/secrets/:id/:key', createRateLimiter(), async (req, res) => {
     try {
-        const { id, key } = req.params;
-        logger.info(`Fetching secret for ID: ${id}, Key: ${key}`);
+        const { id } = req.params;
+        logger.info('Fetching secret request received', { secretId: id, ip: getClientIp(req) });
 
         // Call the controller method to retrieve the secret
         await retrieveSecret(req, res);
@@ -48,8 +57,8 @@ router.get('/secrets/:id/:key', createRateLimiter(), async (req, res) => {
 // Delete secret (with rate limiting)
 router.delete('/secrets/:id/:key', createRateLimiter(), async (req, res) => {
     try {
-        const { id, key } = req.params;
-        logger.info(`Deleting secret for ID: ${id}, Key: ${key}`);
+        const { id } = req.params;
+        logger.info('Deleting secret request received', { secretId: id, ip: getClientIp(req) });
 
         // Call the controller method to delete the secret
         await deleteSecret(req, res);

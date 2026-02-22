@@ -13,8 +13,8 @@ RUN npm install
 # Copy the rest of the backend code to the container
 COPY . .
 
-# Expose the port your application will run on
-EXPOSE 3002
+# Expose frontend, backend API, and telemetry ports
+EXPOSE 9001 9002 9003
 
 # Command to start the Express application
 CMD ["node", "index.js"]
