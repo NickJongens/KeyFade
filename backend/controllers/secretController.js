@@ -2,7 +2,11 @@ const { v4: uuidv4 } = require('uuid');
 const azureService = require('../services/azureService');
 const logger = require('../config/logger');
 const crypto = require('crypto');
-const { recordAbuseEvent } = require('../telemetry/abuseTelemetry');
+const {
+  recordAbuseEvent,
+  noteSecretEntryCreated,
+  noteSecretEntryDeleted,
+} = require('../telemetry/abuseTelemetry');
 const { getClientIp, getSanitizedPath } = require('../utils/requestMeta');
 
 // Function to generate a secure 16-character key
@@ -41,10 +45,12 @@ exports.storeSecret = async (req, res) => {
     // Store the secret with expiration date
     await azureService.storeSecretInVault(name, value, expiresOn);
     logger.info('Secret stored successfully', { secretId: name });
+    noteSecretEntryCreated(name);
 
     // Store the key as a separate secret with expiration date
     await azureService.storeSecretInVault(`${name}-key`, key, keyExpiresOn);
     logger.info('Secret key stored successfully', { secretId: name });
+    noteSecretEntryCreated(`${name}-key`);
 
     // Define the frontend URL (this could also come from an environment variable)
     const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:9001';
@@ -158,7 +164,9 @@ exports.deleteSecret = async (req, res) => {
     }
 
     await azureService.deleteSecretFromVault(id);
+    noteSecretEntryDeleted(id);
     await azureService.deleteSecretFromVault(`${id}-key`);
+    noteSecretEntryDeleted(`${id}-key`);
 
     logger.info(`Secret and key for ID: ${id} deleted successfully`);
     res.json({ message: 'Secret and key deleted successfully' });

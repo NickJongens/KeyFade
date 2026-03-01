@@ -113,6 +113,8 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
 - `GET /api/telemetry/abuse` returns a live incident snapshot.
 - `GET /telemetry/abuse` is also supported for reverse-proxy/tunnel setups that expose the API at root.
 - Query options: `recentLimit`, `hotLimit`, and `targetLimit`.
+- Snapshot now includes `keyVaultInventory.activeSecrets` with tracked active secret counts using startup cache + runtime create/delete updates (no extra Key Vault read calls for telemetry).
+- `keyVaultInventory.isSeededFromVaultScan` indicates whether startup scan data has been applied yet.
 
 Examples:
 

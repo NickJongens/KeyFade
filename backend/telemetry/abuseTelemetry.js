@@ -10,6 +10,11 @@ const totals = {
 const recentEvents = [];
 const ipStats = new Map();
 const targetStats = new Map();
+const trackedSecrets = new Map();
+const inventoryTracking = {
+  lastSyncedAt: null,
+  lastUpdatedAt: null,
+};
 
 const eventTypeToCounter = {
   failed_attempt: 'failedAttempts',
@@ -32,6 +37,103 @@ const toSortedEntries = (map, limit, mapper) => {
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(mapper);
+};
+
+const getBaseSecretId = (name) => (
+  typeof name === 'string' && name.endsWith('-key') ? name.slice(0, -4) : name
+);
+
+const isKeyEntryName = (name) => typeof name === 'string' && name.endsWith('-key');
+
+const buildInventorySnapshot = () => {
+  let activeSecrets = 0;
+
+  for (const state of trackedSecrets.values()) {
+    if (state.hasSecret) activeSecrets += 1;
+  }
+
+  return {
+    activeSecrets,
+    trackingMode: 'cache_plus_runtime_updates',
+    isSeededFromVaultScan: Boolean(inventoryTracking.lastSyncedAt),
+    lastSyncedAt: inventoryTracking.lastSyncedAt,
+    lastUpdatedAt: inventoryTracking.lastUpdatedAt,
+  };
+};
+
+const markSecretEntryState = (secretName, exists, timestampIso) => {
+  if (!secretName || typeof secretName !== 'string') return;
+
+  const baseSecretId = getBaseSecretId(secretName);
+  if (!baseSecretId) return;
+
+  const state = trackedSecrets.get(baseSecretId) || {
+    hasSecret: false,
+    hasKey: false,
+    updatedAt: null,
+  };
+
+  if (isKeyEntryName(secretName)) {
+    state.hasKey = Boolean(exists);
+  } else {
+    state.hasSecret = Boolean(exists);
+  }
+
+  state.updatedAt = timestampIso;
+
+  if (!state.hasSecret && !state.hasKey) {
+    trackedSecrets.delete(baseSecretId);
+    return;
+  }
+
+  trackedSecrets.set(baseSecretId, state);
+};
+
+const syncTrackedSecretsFromVaultNames = (secretNames = []) => {
+  const timestampIso = new Date().toISOString();
+  const nextTrackedSecrets = new Map();
+
+  for (const secretName of secretNames) {
+    if (!secretName || typeof secretName !== 'string') continue;
+
+    const baseSecretId = getBaseSecretId(secretName);
+    if (!baseSecretId) continue;
+
+    const state = nextTrackedSecrets.get(baseSecretId) || {
+      hasSecret: false,
+      hasKey: false,
+      updatedAt: timestampIso,
+    };
+
+    if (isKeyEntryName(secretName)) {
+      state.hasKey = true;
+    } else {
+      state.hasSecret = true;
+    }
+
+    state.updatedAt = timestampIso;
+    nextTrackedSecrets.set(baseSecretId, state);
+  }
+
+  trackedSecrets.clear();
+  for (const [baseSecretId, state] of nextTrackedSecrets.entries()) {
+    trackedSecrets.set(baseSecretId, state);
+  }
+
+  inventoryTracking.lastSyncedAt = timestampIso;
+  inventoryTracking.lastUpdatedAt = timestampIso;
+};
+
+const noteSecretEntryCreated = (secretName) => {
+  const timestampIso = new Date().toISOString();
+  markSecretEntryState(secretName, true, timestampIso);
+  inventoryTracking.lastUpdatedAt = timestampIso;
+};
+
+const noteSecretEntryDeleted = (secretName) => {
+  const timestampIso = new Date().toISOString();
+  markSecretEntryState(secretName, false, timestampIso);
+  inventoryTracking.lastUpdatedAt = timestampIso;
 };
 
 const recordAbuseEvent = (type, details = {}) => {
@@ -112,6 +214,7 @@ const getAbuseTelemetrySnapshot = ({ recentLimit, hotLimit, targetLimit } = {}) 
       normalizedTargetLimit,
       ([target, count]) => ({ target, count })
     ),
+    keyVaultInventory: buildInventorySnapshot(),
     recentEvents: recentEvents.slice(-normalizedRecentLimit).reverse(),
   };
 };
@@ -119,4 +222,7 @@ const getAbuseTelemetrySnapshot = ({ recentLimit, hotLimit, targetLimit } = {}) 
 module.exports = {
   recordAbuseEvent,
   getAbuseTelemetrySnapshot,
+  syncTrackedSecretsFromVaultNames,
+  noteSecretEntryCreated,
+  noteSecretEntryDeleted,
 };
