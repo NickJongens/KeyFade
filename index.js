@@ -29,8 +29,11 @@ backendApp.use(express.urlencoded({ extended: true }));
 // Mount your API routes under /api
 backendApp.use('/api', secretRoutes);
 
-// Mount telemetry routes behind API key auth on the same backend API service
-backendApp.use('/api/telemetry', buildTelemetryApiKeyMiddleware(), telemetryRoutes);
+// Mount telemetry routes behind API key auth on the same backend API service.
+// Support both /api/telemetry/* and /telemetry/* for compatibility with external proxies/tunnels.
+const telemetryApiKeyMiddleware = buildTelemetryApiKeyMiddleware();
+backendApp.use('/api/telemetry', telemetryApiKeyMiddleware, telemetryRoutes);
+backendApp.use('/telemetry', telemetryApiKeyMiddleware, telemetryRoutes);
 
 // /status endpoint to check backend health
 backendApp.get('/status', (req, res) => {

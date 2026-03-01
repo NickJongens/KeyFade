@@ -111,6 +111,7 @@ docker run -d -p <frontendport>:9001 -p <backendport>:9002 \
 ## Abuse Telemetry Dashboard (Port 9002 API Service)
 
 - `GET /api/telemetry/abuse` returns a live incident snapshot.
+- `GET /telemetry/abuse` is also supported for reverse-proxy/tunnel setups that expose the API at root.
 - Query options: `recentLimit`, `hotLimit`, and `targetLimit`.
 
 Examples:
