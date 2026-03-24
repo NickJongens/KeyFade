@@ -9,7 +9,7 @@ const rateLimitCache = new Map(); // In-memory cache to track IPs that triggered
 const createRateLimiter = () => {
   return rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 10, // Limit each Secret ID to 10 requests per window
+    max: 100, // Limit each Secret ID to 100 requests per window
     keyGenerator: (req) => getClientIp(req),
     handler: (req, res) => {
       const clientIp = getClientIp(req);
